@@ -1,0 +1,132 @@
+# Psychological Counseling System Configuration
+
+# LLM Backend Configuration
+llm:
+  # Choose backend: 'api' or 'local'
+  # backend: 'api'
+  backend: 'local'
+  
+  # API Configuration (for OpenAI, Anthropic, etc.)
+  api:
+    provider: 'openai'  # Options: 'openai', 'anthropic', 'azure'
+    model: 'gpt-4o-mini'
+    temperature: 0.7
+    max_tokens: 2000
+    api_key_env: 'OPENAI_API_KEY'  # Environment variable name
+    
+  # Local Model Configuration
+  local:
+    model_path: 'models/models/qwen2-7b-instruct-q4_k_m.gguf'
+    n_ctx: 4096  # Context window
+    n_threads: 8
+    n_gpu_layers: 35  # Use GPU acceleration
+    temperature: 0.7
+    max_tokens: 2000
+
+# RAG Configuration
+rag:
+  # Embedding model
+  embedding:
+    model_name: 'sentence-transformers/paraphrase-multilingual-mpnet-base-v2'
+    device: 'cuda'  # 'cuda' or 'cpu'
+  
+  # Vector store
+  vector_store:
+    type: 'chroma'  # Options: 'chroma', 'faiss'
+    persist_directory: './data/vector_db'
+  
+  # Retrieval parameters
+  retrieval:
+    top_k: 5  # Number of documents to retrieve
+    score_threshold: 0.5  # Minimum similarity score
+    rerank: true  # Enable reranking
+
+# Knowledge Base Configuration
+knowledge:
+  # Psychological knowledge base
+  psychological_kb:
+    path: './data/psychological_knowledge'
+    collection_name: 'psych_knowledge'
+    chunk_size: 500
+    chunk_overlap: 50
+    
+  # User-specific knowledge base
+  user_kb:
+    path: './data/user_profiles'
+    collection_name: 'user_info'
+    chunk_size: 300
+    chunk_overlap: 30
+
+# Memory System Configuration
+memory:
+  # Storage backend
+  storage:
+    type: 'json'  # Options: 'json', 'sqlite', 'mongodb'
+    path: './data/memory_db'
+  
+  # Memory layers
+  layers:
+    # Session-level (short-term)
+    session:
+      max_turns: 50
+      enabled: true
+      
+    # User profile (mid-term)
+    profile:
+      auto_update: true
+      fields:
+        - 'age'
+        - 'gender'
+        - 'occupation'
+        - 'main_issues'
+        - 'life_events'
+        
+    # Long-term trends
+    trends:
+      track_emotions: true
+      track_topics: true
+      track_interventions: true
+  
+  # Memory retrieval
+  retrieval:
+    time_decay_factor: 0.95  # Recent memories have higher weight
+    max_history_sessions: 10  # Max number of past sessions to consider
+    
+  # Memory update
+  update:
+    auto_summarize: true
+    summarize_backend: 'local'  # Use local model for cost-saving
+
+# Dialogue Management
+dialogue:
+  system_prompt: |
+    你是一位专业、有同理心的心理咨询师。你的任务是：
+    1. 倾听用户的问题和感受
+    2. 提供专业的心理学见解和建议
+    3. 运用认知行为疗法(CBT)等技术帮助用户
+    4. 保持温暖、非评判的态度
+    5. 记住并关联用户的历史信息
+    
+  max_context_length: 8000  # Maximum tokens in context
+  
+  # Response generation
+  generation:
+    enable_rag: true
+    enable_memory: true
+    
+    # Knowledge source weights
+    weights:
+      psychological_knowledge: 0.6
+      user_knowledge: 0.4
+
+# Logging Configuration
+logging:
+  level: 'INFO'  # DEBUG, INFO, WARNING, ERROR
+  log_file: './logs/system.log'
+  log_to_console: true
+
+# System Paths
+paths:
+  data_dir: './data'
+  logs_dir: './logs'
+  cache_dir: './cache'
