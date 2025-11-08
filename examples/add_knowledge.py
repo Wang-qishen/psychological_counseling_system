@@ -122,13 +122,7 @@ def add_user_knowledge(dialogue_manager, user_info_dir):
     
     # 添加到知识库
     if documents:
-        # dialogue_manager.rag_manager.add_user_knowledge(documents)  这一行报错了
-        # 逐个添加用户文档
-        for doc in documents:
-            dialogue_manager.rag_manager.add_user_knowledge(
-                user_id="default_user",  # 使用默认用户ID
-                content=doc
-            )
+        dialogue_manager.rag_manager.add_user_knowledge(documents)
         print(f"\n成功添加 {len(documents)} 个用户档案到知识库！")
     else:
         print("\n未添加任何文档")
