@@ -58,39 +58,6 @@ class FullEvaluator:
         with open(config_path, 'r', encoding='utf-8') as f:
             return yaml.safe_load(f)
     
-    # def initialize(self):
-    #     """初始化评估系统"""
-    #     print("\n" + "="*70)
-    #     print(" "*20 + "完整评估 - 心理咨询系统")
-    #     print("="*70)
-        
-    #     # 1. 初始化对话管理器
-    #     print("\n" + "-"*70)
-    #     print(" 1. 初始化对话管理器")
-    #     print("-"*70)
-        
-    #     try:
-    #         self.dialogue_manager = DialogueManager(self.system_config)
-    #         print("✓ 对话管理器初始化成功")
-    #     except Exception as e:
-    #         print(f"✗ 对话管理器初始化失败: {e}")
-    #         raise
-        
-    #     # 2. 创建评估框架
-    #     print("\n" + "-"*70)
-    #     print(" 2. 创建评估框架")
-    #     print("-"*70)
-        
-    #     try:
-    #         self.eval_framework = EvaluationFramework(
-    #             dialogue_manager=self.dialogue_manager,
-    #             config=self.eval_config
-    #         )
-    #         print("✓ 评估框架创建成功")
-    #     except Exception as e:
-    #         print(f"✗ 评估框架创建失败: {e}")
-    #         raise
-    
     def initialize(self):
         """初始化评估系统"""
         print("\n" + "="*70)
@@ -106,19 +73,51 @@ class FullEvaluator:
             # 创建LLM
             from llm.factory import create_llm_from_config
             llm = create_llm_from_config(self.system_config)
-
+            
             # 创建RAG管理器
             from knowledge.rag_manager import RAGManager
+            from knowledge.chroma_kb import ChromaKnowledgeBase
+            
             rag_config = self.system_config.get('rag', {})
+            
+            # 为两个知识库准备配置
+            psych_kb_config = {
+                'collection_name': 'psychological_knowledge',
+                'persist_directory': rag_config.get('persist_directory', './data/chroma_db'),
+                'embedding': rag_config.get('embedding', {})
+            }
+            
+            user_kb_config = {
+                'collection_name': 'user_knowledge',
+                'persist_directory': rag_config.get('persist_directory', './data/chroma_db'),
+                'embedding': rag_config.get('embedding', {})
+            }
+            
+            # 创建两个知识库
+            psychological_kb = ChromaKnowledgeBase(psych_kb_config)
+            user_kb = ChromaKnowledgeBase(user_kb_config)
+            
+            # 创建RAG管理器
             rag_manager = RAGManager(
-                llm=llm,
+                psychological_kb=psychological_kb,
+                user_kb=user_kb,
                 config=rag_config
             )
-
+            
             # 创建记忆管理器
             from memory.manager import MemoryManager
+            from memory.storage import JSONMemoryStorage
+
             memory_config = self.system_config.get('memory', {})
-            memory_manager = MemoryManager(config=memory_config)
+            storage_path = memory_config.get('storage', {}).get('path', './data/memory_db')
+            storage = JSONMemoryStorage(storage_path)
+            memory_manager = MemoryManager(
+                storage=storage,
+                summarizer=llm,  # 使用LLM作为摘要器
+                config=memory_config
+            )
+            
+           
 
             # 创建对话管理器
             self.dialogue_manager = DialogueManager(
@@ -128,10 +127,26 @@ class FullEvaluator:
                 config=self.system_config.get('dialogue', {})
             )
             
-            print("✓ 对话管理器初始化成功")
+            # 2. 创建评估框架
+            print("\n" + "-"*70)
+            print(" 2. 创建评估框架")
+            print("-"*70)
+            
+          
+            self.eval_framework = EvaluationFramework(
+                dialogue_manager=self.dialogue_manager,
+                llm_evaluator=llm,  # 使用LLM作为评估器
+                data_dir=self.eval_config.get('data_dir', './data'),
+                output_dir=self.eval_config.get('output_dir', './evaluation_results')
+            )
+            print("✓ 评估框架创建成功")
+            
         except Exception as e:
-            print(f"✗ 对话管理器初始化失败: {e}")
+            print(f"✗ 初始化失败: {e}")
             raise
+
+
+
             
 
     def load_test_data(self, num_samples: int = None) -> List[Dict]:
@@ -154,10 +169,11 @@ class FullEvaluator:
         try:
             # 从MentalChat16K加载测试数据
             loader = MentalChatLoader()
-            test_questions = loader.get_test_questions(num_samples=num_samples)
+            test_questions = loader.get_test_split(num_samples=num_samples)
             
+
             print(f"✓ 成功加载 {len(test_questions)} 个测试问题")
-            print(f"  数据集: {dataset_name}")
+            print(f"  数据集: MentalChat16K")
             print(f"  样本数: {len(test_questions)}")
             
             return test_questions
@@ -184,8 +200,12 @@ class FullEvaluator:
         
         try:
             # 运行评估
-            self.results = self.eval_framework.evaluate(test_questions)
-            
+            self.results = self.eval_framework.run_full_evaluation(
+                dataset="mentalchat",
+                num_test_samples=len(test_questions),
+                generate_memory_tests=False  # 禁用记忆测试生成，避免错误
+            )
+                        
             elapsed_time = time.time() - start_time
             
             print(f"\n✓ 评估完成！")

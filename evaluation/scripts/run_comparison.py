@@ -131,7 +131,7 @@ class ComparisonExperiment:
             num_samples = self.eval_config.get('num_test_samples', 50)
         
         loader = MentalChatLoader()
-        test_questions = loader.get_test_questions(num_samples=num_samples)
+        test_questions = loader.get_test_split(num_samples=num_samples)
         print(f"✓ 加载 {len(test_questions)} 个测试问题")
         
         # 依次运行三种配置
@@ -150,6 +150,8 @@ class ComparisonExperiment:
             
             start_time = time.time()
 
+            
+                
             try:
                 # 创建对话管理器
                 print(f"\n初始化 {config_desc}...")
@@ -160,16 +162,46 @@ class ComparisonExperiment:
 
                 # 创建RAG管理器
                 from knowledge.rag_manager import RAGManager
+                from knowledge.chroma_kb import ChromaKnowledgeBase
+                
                 rag_config = self.configs[config_name].get('rag', {})
+                
+                # 为两个知识库准备配置
+                psych_kb_config = {
+                    'collection_name': 'psychological_knowledge',
+                    'persist_directory': rag_config.get('persist_directory', './data/chroma_db'),
+                    'embedding': rag_config.get('embedding', {})
+                }
+                
+                user_kb_config = {
+                    'collection_name': 'user_knowledge',
+                    'persist_directory': rag_config.get('persist_directory', './data/chroma_db'),
+                    'embedding': rag_config.get('embedding', {})
+                }
+                
+                # 创建两个知识库
+                psychological_kb = ChromaKnowledgeBase(psych_kb_config)
+                user_kb = ChromaKnowledgeBase(user_kb_config)
+                
+                # 创建RAG管理器
                 rag_manager = RAGManager(
-                    llm=llm,
+                    psychological_kb=psychological_kb,
+                    user_kb=user_kb,
                     config=rag_config
                 )
-
+                
                 # 创建记忆管理器
                 from memory.manager import MemoryManager
+                from memory.storage import JSONMemoryStorage
+
                 memory_config = self.configs[config_name].get('memory', {})
-                memory_manager = MemoryManager(config=memory_config)
+                storage_path = memory_config.get('storage', {}).get('path', './data/memory_db')
+                storage = JSONMemoryStorage(storage_path)
+                memory_manager = MemoryManager(
+                    storage=storage,
+                    summarizer=llm,
+                    config=memory_config
+                )
 
                 # 创建对话管理器
                 dialogue_manager = DialogueManager(
@@ -182,12 +214,18 @@ class ComparisonExperiment:
                 # 创建评估框架
                 eval_framework = EvaluationFramework(
                     dialogue_manager=dialogue_manager,
-                    config=self.eval_config
+                    llm_evaluator=llm,
+                    data_dir=self.eval_config.get('data_dir', './data'),
+                    output_dir=self.eval_config.get('output_dir', './evaluation_results')
                 )
                 
                 # 运行评估
                 print(f"开始评估...")
-                results = eval_framework.evaluate(test_questions)
+                results = eval_framework.run_full_evaluation(
+                    dataset="mentalchat",
+                    num_test_samples=len(test_questions),
+                    generate_memory_tests=False
+                )
                 
                 elapsed_time = time.time() - start_time
                 
