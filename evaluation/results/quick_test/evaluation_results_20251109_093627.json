@@ -1,0 +1,16 @@
+{
+  "evaluation_time": "2025-11-09T09:35:42.910983",
+  "test_data_info": {
+    "num_questions": 10,
+    "clinical_sample_size": 5
+  },
+  "technical_metrics": {
+    "bert_precision": 0.0,
+    "bert_recall": 0.0,
+    "bert_f1": 0.0,
+    "rouge1_f1": 0.0,
+    "rouge2_f1": 0.0,
+    "rougeL_f1": 0.0,
+    "bleu": 0.0,
+    "avg_length": 0.0,
+    "min_length": 

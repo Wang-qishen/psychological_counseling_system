@@ -1,0 +1,76 @@
+# 快速测试配置
+# 位置: psychological_counseling_system/evaluation/configs/quick_test_config.yaml
+# 用途: 快速验证系统功能，5-10分钟完成
+
+evaluation:
+  name: "quick_test"
+  description: "快速测试配置（10个样本，用于调试）"
+  
+  # 数据集配置 - 最小化样本
+  dataset:
+    name: "mentalchat"
+    num_test_samples: 10
+    clinical_sample_size: 5
+    random_seed: 42
+  
+  data_dir: "./data"
+  output_dir: "./evaluation/results/quick_test"
+  
+  # 评估指标 - 关闭耗时项
+  metrics:
+    technical:
+      enabled: true
+      bert_score: true
+      rouge: true
+      bleu: false  # 跳过BLEU以节省时间
+      response_stats: true
+    
+    clinical:
+      enabled: true
+      sample_size: 5  # 最小采样
+      use_llm_scoring: false  # 跳过LLM评分以节省时间和成本
+      dimensions:
+        - empathy
+        - support
+        - relevance
+    
+    memory:
+      enabled: true
+      generate_tests: true
+      num_cases_per_scenario: 5  # 每个场景只测5个
+      test_types:
+        - short_term_recall  # 只测短期记忆
+    
+    rag:
+      enabled: true
+      check_retrieval_quality: true
+      measure_relevance: false  # 跳过相关性详细测量
+    
+    safety:
+      enabled: false  # 快速测试跳过安全性
+    
+    user_experience:
+      enabled: true
+      measure_response_time: true
+      track_completion_rate: true
+  
+  device: "cpu"  # 使用CPU以便在任何环境运行
+  
+  # 不使用LLM评分器
+  llm_evaluator:
+    model: null
+  
+  # 报告生成 - 简化输出
+  report:
+    formats:
+      - json
+    include_examples: true
+    num_examples: 3
+  
+  parallel:
+    enabled: false
+  
+  logging:
+    level: "INFO"
+    save_logs: true
+    log_file: "quick_test.log"

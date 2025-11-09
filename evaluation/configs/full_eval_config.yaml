@@ -1,0 +1,122 @@
+# 完整评估配置
+# 位置: psychological_counseling_system/evaluation/configs/full_eval_config.yaml
+# 用途: 用于论文发表的完整评估，包含所有指标
+
+evaluation:
+  name: "full_evaluation"
+  description: "完整评估配置（用于论文和正式报告）"
+  
+  # 数据集配置 - 完整样本
+  dataset:
+    name: "mentalchat"
+    num_test_samples: 200  # 与Mentalic Net保持一致
+    clinical_sample_size: 50
+    random_seed: 42
+    
+  data_dir: "./data"
+  output_dir: "./evaluation/results/full_evaluation"
+  
+  # 评估指标 - 全部启用
+  metrics:
+    technical:
+      enabled: true
+      bert_score: true
+      rouge: true
+      bleu: true
+      response_stats: true
+      compute_perplexity: false  # 可选，需要语言模型
+    
+    clinical:
+      enabled: true
+      sample_size: 50
+      use_llm_scoring: true  # 使用LLM进行专业评分
+      dimensions:
+        - empathy
+        - support
+        - guidance
+        - relevance
+        - communication
+        - fluency
+        - safety
+      inter_rater_reliability: false  # 可选，需要多个评分者
+    
+    memory:
+      enabled: true
+      generate_tests: true
+      num_cases_per_scenario: 20
+      test_types:
+        - short_term_recall
+        - working_memory
+        - long_term_consistency
+        - cross_session_memory
+      detailed_analysis: true
+    
+    rag:
+      enabled: true
+      check_retrieval_quality: true
+      measure_relevance: true
+      analyze_knowledge_usage: true
+      top_k_analysis: [1, 3, 5, 10]
+    
+    safety:
+      enabled: true
+      test_harmful_content: true
+      test_privacy: true
+      test_ethics: true
+      test_boundary_cases: true
+      adversarial_testing: false  # 可选，高级安全测试
+    
+    user_experience:
+      enabled: true
+      measure_response_time: true
+      track_completion_rate: true
+      user_satisfaction_simulation: true
+  
+  # 计算设备
+  device: "cuda"  # 使用GPU加速
+  
+  # LLM评分器配置
+  llm_evaluator:
+    model: "gpt-4"
+    temperature: 0.3
+    max_tokens: 500
+    batch_size: 10  # 批量处理以节省API调用
+  
+  # 报告生成 - 完整输出
+  report:
+    formats:
+      - json
+      - markdown
+      - visualization
+      - latex  # 可选，用于论文
+    include_examples: true
+    num_examples: 20
+    generate_comparison_tables: true
+    statistical_analysis: true
+  
+  # 对比基准
+  baselines:
+    mentalic_net:
+      bert_score_f1: 0.898
+      clinical_average: 4.2
+      rag_recall: 0.86
+      rag_precision: 0.51
+  
+  # 并行处理 - 加速评估
+  parallel:
+    enabled: true
+    num_workers: 4
+  
+  # 实验记录
+  experiment:
+    track_version: true
+    save_model_config: true
+    save_system_logs: true
+    reproducibility_info: true
+  
+  # 日志配置
+  logging:
+    level: "INFO"
+    save_logs: true
+    log_file: "full_evaluation.log"
+    detailed_metrics: true

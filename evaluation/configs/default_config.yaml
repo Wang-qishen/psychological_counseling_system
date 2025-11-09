@@ -1,0 +1,95 @@
+# 默认评估配置
+# 位置: psychological_counseling_system/evaluation/configs/default_config.yaml
+
+evaluation:
+  # 基础设置
+  name: "default_evaluation"
+  description: "标准评估配置"
+  
+  # 数据集配置
+  dataset:
+    name: "mentalchat"
+    num_test_samples: 200
+    clinical_sample_size: 50
+    random_seed: 42
+    
+  # 数据目录
+  data_dir: "./data"
+  output_dir: "./evaluation/results"
+  
+  # 评估指标开关
+  metrics:
+    technical:
+      enabled: true
+      bert_score: true
+      rouge: true
+      bleu: true
+      response_stats: true
+    
+    clinical:
+      enabled: true
+      sample_size: 50
+      use_llm_scoring: true
+      dimensions:
+        - empathy
+        - support
+        - guidance
+        - relevance
+        - communication
+        - fluency
+        - safety
+    
+    memory:
+      enabled: true
+      generate_tests: true
+      num_cases_per_scenario: 20
+      test_types:
+        - short_term_recall
+        - working_memory
+        - long_term_consistency
+    
+    rag:
+      enabled: true
+      check_retrieval_quality: true
+      measure_relevance: true
+    
+    safety:
+      enabled: true
+      test_harmful_content: true
+      test_privacy: true
+      test_ethics: true
+      test_boundary_cases: true
+    
+    user_experience:
+      enabled: true
+      measure_response_time: true
+      track_completion_rate: true
+  
+  # 计算设备
+  device: "cuda"  # "cuda" 或 "cpu"
+  
+  # LLM评分器配置（用于临床指标）
+  llm_evaluator:
+    model: "gpt-4"
+    temperature: 0.3
+    max_tokens: 500
+  
+  # 报告生成
+  report:
+    formats:
+      - json
+      - markdown
+      - visualization
+    include_examples: true
+    num_examples: 10
+  
+  # 并行处理
+  parallel:
+    enabled: false
+    num_workers: 4
+  
+  # 日志配置
+  logging:
+    level: "INFO"
+    save_logs: true
+    log_file: "evaluation.log"

@@ -1,0 +1,239 @@
+================================================================================
+               需要复制到你仓库的文件清单
+================================================================================
+
+📋 第一阶段交付文件总览
+
+共需要复制: 7个文件 + 2个新目录
+总大小: 约 61 KB
+原则: 完全增量式，零破坏性
+
+================================================================================
+                     文件复制清单
+================================================================================
+
+1️⃣ evaluation/README.md
+   源文件: evaluation/README.md
+   目标位置: your_repo/psychological_counseling_system/evaluation/README.md
+   大小: 16 KB
+   说明: 评估模块完整文档
+   重要性: ⭐⭐⭐⭐⭐ 必读！
+
+2️⃣ evaluation/configs/ (新目录)
+   
+   2.1 evaluation/configs/default_config.yaml
+       源文件: evaluation/configs/default_config.yaml
+       目标位置: your_repo/psychological_counseling_system/evaluation/configs/default_config.yaml
+       大小: 2.5 KB
+       说明: 默认评估配置
+   
+   2.2 evaluation/configs/quick_test_config.yaml
+       源文件: evaluation/configs/quick_test_config.yaml
+       目标位置: your_repo/psychological_counseling_system/evaluation/configs/quick_test_config.yaml
+       大小: 2 KB
+       说明: 快速测试配置
+   
+   2.3 evaluation/configs/full_eval_config.yaml
+       源文件: evaluation/configs/full_eval_config.yaml
+       目标位置: your_repo/psychological_counseling_system/evaluation/configs/full_eval_config.yaml
+       大小: 3.5 KB
+       说明: 完整评估配置
+
+3️⃣ evaluation/datasets/download_datasets.py
+   源文件: evaluation/datasets/download_datasets.py
+   目标位置: your_repo/psychological_counseling_system/evaluation/datasets/download_datasets.py
+   大小: 15 KB
+   说明: 数据集自动下载脚本
+   可执行: ✅ 需要 chmod +x
+
+4️⃣ evaluation/scripts/ (新目录)
+   
+   4.1 evaluation/scripts/run_quick_test.py
+       源文件: evaluation/scripts/run_quick_test.py
+       目标位置: your_repo/psychological_counseling_system/evaluation/scripts/run_quick_test.py
+       大小: 12 KB
+       说明: 快速测试运行脚本
+       可执行: ✅ 需要 chmod +x
+
+5️⃣ examples/evaluation_examples.py
+   源文件: evaluation_examples.py
+   目标位置: your_repo/psychological_counseling_system/examples/evaluation_examples.py
+   大小: 10 KB
+   说明: 5个使用示例
+   可执行: ✅ 需要 chmod +x
+
+================================================================================
+                     批量复制命令
+================================================================================
+
+方法1: 逐个复制 (推荐，更安全)
+--------------------------------
+cd your_repo/psychological_counseling_system
+
+# 1. 复制README
+cp /path/to/downloads/evaluation/README.md evaluation/
+
+# 2. 创建configs目录并复制配置文件
+mkdir -p evaluation/configs
+cp /path/to/downloads/evaluation/configs/default_config.yaml evaluation/configs/
+cp /path/to/downloads/evaluation/configs/quick_test_config.yaml evaluation/configs/
+cp /path/to/downloads/evaluation/configs/full_eval_config.yaml evaluation/configs/
+
+# 3. 复制数据集脚本
+cp /path/to/downloads/evaluation/datasets/download_datasets.py evaluation/datasets/
+chmod +x evaluation/datasets/download_datasets.py
+
+# 4. 创建scripts目录并复制运行脚本
+mkdir -p evaluation/scripts
+cp /path/to/downloads/evaluation/scripts/run_quick_test.py evaluation/scripts/
+chmod +x evaluation/scripts/run_quick_test.py
+
+# 5. 复制使用示例
+cp /path/to/downloads/evaluation_examples.py examples/
+chmod +x examples/evaluation_examples.py
+
+
+方法2: 使用脚本批量复制
+--------------------------------
+创建以下脚本并运行:
+
+#!/bin/bash
+# install_phase1.sh
+
+SOURCE_DIR="/path/to/downloads"  # 修改为实际下载路径
+TARGET_DIR="."  # 在项目根目录运行
+
+echo "开始安装第一阶段文件..."
+
+# 1. README
+cp "$SOURCE_DIR/evaluation/README.md" "$TARGET_DIR/evaluation/"
+echo "✓ README 已安装"
+
+# 2. 配置文件
+mkdir -p "$TARGET_DIR/evaluation/configs"
+cp "$SOURCE_DIR/evaluation/configs/"*.yaml "$TARGET_DIR/evaluation/configs/"
+echo "✓ 配置文件已安装"
+
+# 3. 数据集脚本
+cp "$SOURCE_DIR/evaluation/datasets/download_datasets.py" "$TARGET_DIR/evaluation/datasets/"
+chmod +x "$TARGET_DIR/evaluation/datasets/download_datasets.py"
+echo "✓ 数据集脚本已安装"
+
+# 4. 运行脚本
+mkdir -p "$TARGET_DIR/evaluation/scripts"
+cp "$SOURCE_DIR/evaluation/scripts/run_quick_test.py" "$TARGET_DIR/evaluation/scripts/"
+chmod +x "$TARGET_DIR/evaluation/scripts/run_quick_test.py"
+echo "✓ 运行脚本已安装"
+
+# 5. 示例文件
+cp "$SOURCE_DIR/evaluation_examples.py" "$TARGET_DIR/examples/"
+chmod +x "$TARGET_DIR/examples/evaluation_examples.py"
+echo "✓ 示例文件已安装"
+
+echo ""
+echo "===================="
+echo "安装完成！"
+echo "===================="
+
+================================================================================
+                     安装验证
+================================================================================
+
+复制完成后，运行以下命令验证:
+
+cd your_repo/psychological_counseling_system
+
+# 检查文件是否存在
+ls -lh evaluation/README.md
+ls -lh evaluation/configs/*.yaml
+ls -lh evaluation/datasets/download_datasets.py
+ls -lh evaluation/scripts/run_quick_test.py
+ls -lh examples/evaluation_examples.py
+
+# 检查脚本是否可执行
+test -x evaluation/datasets/download_datasets.py && echo "✓ download_datasets 可执行" || echo "✗ 需要 chmod +x"
+test -x evaluation/scripts/run_quick_test.py && echo "✓ run_quick_test 可执行" || echo "✗ 需要 chmod +x"
+test -x examples/evaluation_examples.py && echo "✓ evaluation_examples 可执行" || echo "✗ 需要 chmod +x"
+
+================================================================================
+                     后续步骤
+================================================================================
+
+文件复制完成后:
+
+1. 安装依赖
+   pip install datasets pyyaml bert-score rouge-score nltk matplotlib seaborn
+
+2. 下载数据集
+   python evaluation/datasets/download_datasets.py --dataset mentalchat
+
+3. 运行快速测试
+   python evaluation/scripts/run_quick_test.py
+
+4. 查看结果
+   cat evaluation/results/quick_test/quick_test_*.json
+
+5. 运行示例
+   python examples/evaluation_examples.py
+
+================================================================================
+                     文档文件（参考用）
+================================================================================
+
+以下文档文件不需要复制到仓库，供你学习参考:
+
+📖 README_PHASE1.md (13 KB)
+   - 第一阶段快速总览
+   - 推荐首先阅读
+
+📖 PHASE1_SUMMARY.md (18 KB)
+   - 详细的开发总结
+   - 深入了解功能
+
+📖 FILE_CHECKLIST.md (19 KB)
+   - 完整的安装指南
+   - 问题排查
+
+📖 DIRECTORY_STRUCTURE.txt (15 KB)
+   - 可视化目录结构
+   - 参考对照
+
+📖 DELIVERY_FINAL.md (20 KB)
+   - 最终交付清单
+   - 全面总结
+
+================================================================================
+                     快速参考
+================================================================================
+
+文件数量: 7个文件 + 2个目录
+总大小: ~61 KB
+开发原则: 完全增量式，零破坏性
+兼容性: 完全兼容现有代码
+状态: ✅ Ready for Use
+
+重要提醒:
+1. ⚠️ 不要修改原有文件，只添加新文件
+2. ⚠️ 确保脚本有执行权限 (chmod +x)
+3. ⚠️ 先下载数据集再运行测试
+4. ⚠️ 阅读 evaluation/README.md
+
+================================================================================
+                     需要帮助？
+================================================================================
+
+查看文档:
+- README_PHASE1.md - 快速开始
+- evaluation/README.md - 详细说明
+- FILE_CHECKLIST.md - 安装指导
+
+问题排查:
+1. 文件路径错误 -> 检查当前目录
+2. 权限问题 -> 运行 chmod +x
+3. 模块导入错误 -> 检查 PYTHONPATH
+4. 依赖缺失 -> 重新安装依赖
+
+================================================================================
+
+🎊 祝你使用顺利，评估成功，论文发表！ 🚀📊🎓
+
