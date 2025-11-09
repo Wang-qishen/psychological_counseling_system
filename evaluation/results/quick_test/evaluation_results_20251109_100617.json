@@ -1,0 +1,21 @@
+{
+  "evaluation_time": "2025-11-09T09:56:45.404298",
+  "test_data_info": {
+    "num_questions": 10,
+    "clinical_sample_size": 5
+  },
+  "technical_metrics": {
+    "bert_precision": 0.7440195083618164,
+    "bert_recall": 0.7379315495491028,
+    "bert_f1": 0.7408534288406372,
+    "rouge1_f1": 0.5217575202591365,
+    "rouge2_f1": 0.1455010420312738,
+    "rougeL_f1": 0.1915900531371018,
+    "bleu": 0.5338963345204024,
+    "avg_length": 2827.4,
+    "min_length": 784.0,
+    "max_length": 3973.0,
+    "std_length": 983.3460428557182
+  },
+  "overall_score": 0.7408534288406372
+}

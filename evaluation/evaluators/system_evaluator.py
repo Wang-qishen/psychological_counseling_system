@@ -260,7 +260,8 @@ class SystemEvaluator:
             try:
                 response = self.dialogue_manager.chat(
                     user_id="eval_user",
-                    message=question
+                    session_id="eval_session",
+                    user_message=question
                 )
                 predictions.append(response)
             except Exception as e:

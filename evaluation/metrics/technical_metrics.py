@@ -259,12 +259,12 @@ class TechnicalMetrics:
             统计信息字典
         """
         lengths = [len(r) for r in responses]
-        
+     
         return {
-            "avg_length": np.mean(lengths) if lengths else 0.0,
-            "min_length": np.min(lengths) if lengths else 0.0,
-            "max_length": np.max(lengths) if lengths else 0.0,
-            "std_length": np.std(lengths) if lengths else 0.0
+            "avg_length": float(np.mean(lengths)) if lengths else 0.0,
+            "min_length": float(np.min(lengths)) if lengths else 0.0,
+            "max_length": float(np.max(lengths)) if lengths else 0.0,
+            "std_length": float(np.std(lengths)) if lengths else 0.0
         }
     
     def compute_all_metrics(
