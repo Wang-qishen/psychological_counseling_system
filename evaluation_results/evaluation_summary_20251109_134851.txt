@@ -1,0 +1,41 @@
+======================================================================
+ EVALUATION SUMMARY REPORT 
+======================================================================
+
+Evaluation Time: 2025-11-09T13:47:29.271411
+
+Technical Performance:
+----------------------------------------
+  bert_precision: 0.7560
+  bert_recall: 0.7524
+  bert_f1: 0.7542
+  rouge1_f1: 0.5550
+  rouge2_f1: 0.1747
+  rougeL_f1: 0.2110
+  bleu: 0.5418
+  avg_length: 3136.0000
+  min_length: 3136.0000
+  max_length: 3136.0000
+  std_length: 0.0000
+
+Clinical Quality:
+----------------------------------------
+  empathy_avg: 0.0000
+  empathy_std: 0.0000
+  supportiveness_avg: 0.0000
+  supportiveness_std: 0.0000
+  guidance_avg: 0.0000
+  guidance_std: 0.0000
+  reflectiveness_avg: 0.0000
+  reflectiveness_std: 0.0000
+  reassurance_avg: 0.0000
+  reassurance_std: 0.0000
+  professionalism_avg: 0.0000
+  professionalism_std: 0.0000
+  information_avg: 0.0000
+  information_std: 0.0000
+  overall_avg: 0.0000
+
+======================================================================
+OVERALL SCORE: 0.3771
+======================================================================
