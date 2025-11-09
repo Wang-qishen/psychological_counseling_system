@@ -32,7 +32,7 @@ from copy import deepcopy
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from evaluation.framework import EvaluationFramework
-from evaluation.datasets.dataset_loader import load_dataset
+from evaluation.datasets.mentalchat_loader import MentalChatLoader
 from dialogue.manager import DialogueManager
 
 
@@ -130,7 +130,8 @@ class ComparisonExperiment:
         if num_samples is None:
             num_samples = self.eval_config.get('num_test_samples', 50)
         
-        test_questions = load_dataset('mentalchat', split='test', num_samples=num_samples)
+        loader = MentalChatLoader()
+        test_questions = loader.get_test_questions(num_samples=num_samples)
         print(f"✓ 加载 {len(test_questions)} 个测试问题")
         
         # 依次运行三种配置
@@ -148,11 +149,35 @@ class ComparisonExperiment:
             print("="*70)
             
             start_time = time.time()
-            
+
             try:
                 # 创建对话管理器
                 print(f"\n初始化 {config_desc}...")
-                dialogue_manager = DialogueManager(self.configs[config_name])
+                
+                # 创建LLM
+                from llm.factory import create_llm_from_config
+                llm = create_llm_from_config(self.configs[config_name])
+
+                # 创建RAG管理器
+                from knowledge.rag_manager import RAGManager
+                rag_config = self.configs[config_name].get('rag', {})
+                rag_manager = RAGManager(
+                    llm=llm,
+                    config=rag_config
+                )
+
+                # 创建记忆管理器
+                from memory.manager import MemoryManager
+                memory_config = self.configs[config_name].get('memory', {})
+                memory_manager = MemoryManager(config=memory_config)
+
+                # 创建对话管理器
+                dialogue_manager = DialogueManager(
+                    llm=llm,
+                    rag_manager=rag_manager,
+                    memory_manager=memory_manager,
+                    config=self.configs[config_name].get('dialogue', {})
+                )
                 
                 # 创建评估框架
                 eval_framework = EvaluationFramework(

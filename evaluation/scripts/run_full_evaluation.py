@@ -26,7 +26,7 @@ from typing import Dict, List, Any
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from evaluation.framework import EvaluationFramework
-from evaluation.datasets.dataset_loader import load_dataset
+from evaluation.datasets.mentalchat_loader import MentalChatLoader
 from dialogue.manager import DialogueManager
 
 
@@ -58,6 +58,39 @@ class FullEvaluator:
         with open(config_path, 'r', encoding='utf-8') as f:
             return yaml.safe_load(f)
     
+    # def initialize(self):
+    #     """初始化评估系统"""
+    #     print("\n" + "="*70)
+    #     print(" "*20 + "完整评估 - 心理咨询系统")
+    #     print("="*70)
+        
+    #     # 1. 初始化对话管理器
+    #     print("\n" + "-"*70)
+    #     print(" 1. 初始化对话管理器")
+    #     print("-"*70)
+        
+    #     try:
+    #         self.dialogue_manager = DialogueManager(self.system_config)
+    #         print("✓ 对话管理器初始化成功")
+    #     except Exception as e:
+    #         print(f"✗ 对话管理器初始化失败: {e}")
+    #         raise
+        
+    #     # 2. 创建评估框架
+    #     print("\n" + "-"*70)
+    #     print(" 2. 创建评估框架")
+    #     print("-"*70)
+        
+    #     try:
+    #         self.eval_framework = EvaluationFramework(
+    #             dialogue_manager=self.dialogue_manager,
+    #             config=self.eval_config
+    #         )
+    #         print("✓ 评估框架创建成功")
+    #     except Exception as e:
+    #         print(f"✗ 评估框架创建失败: {e}")
+    #         raise
+    
     def initialize(self):
         """初始化评估系统"""
         print("\n" + "="*70)
@@ -70,27 +103,37 @@ class FullEvaluator:
         print("-"*70)
         
         try:
-            self.dialogue_manager = DialogueManager(self.system_config)
+            # 创建LLM
+            from llm.factory import create_llm_from_config
+            llm = create_llm_from_config(self.system_config)
+
+            # 创建RAG管理器
+            from knowledge.rag_manager import RAGManager
+            rag_config = self.system_config.get('rag', {})
+            rag_manager = RAGManager(
+                llm=llm,
+                config=rag_config
+            )
+
+            # 创建记忆管理器
+            from memory.manager import MemoryManager
+            memory_config = self.system_config.get('memory', {})
+            memory_manager = MemoryManager(config=memory_config)
+
+            # 创建对话管理器
+            self.dialogue_manager = DialogueManager(
+                llm=llm,
+                rag_manager=rag_manager,
+                memory_manager=memory_manager,
+                config=self.system_config.get('dialogue', {})
+            )
+            
             print("✓ 对话管理器初始化成功")
         except Exception as e:
             print(f"✗ 对话管理器初始化失败: {e}")
             raise
-        
-        # 2. 创建评估框架
-        print("\n" + "-"*70)
-        print(" 2. 创建评估框架")
-        print("-"*70)
-        
-        try:
-            self.eval_framework = EvaluationFramework(
-                dialogue_manager=self.dialogue_manager,
-                config=self.eval_config
-            )
-            print("✓ 评估框架创建成功")
-        except Exception as e:
-            print(f"✗ 评估框架创建失败: {e}")
-            raise
-    
+            
+
     def load_test_data(self, num_samples: int = None) -> List[Dict]:
         """
         加载测试数据
@@ -110,8 +153,8 @@ class FullEvaluator:
         
         try:
             # 从MentalChat16K加载测试数据
-            dataset_name = self.eval_config.get('dataset', 'mentalchat')
-            test_questions = load_dataset(dataset_name, split='test', num_samples=num_samples)
+            loader = MentalChatLoader()
+            test_questions = loader.get_test_questions(num_samples=num_samples)
             
             print(f"✓ 成功加载 {len(test_questions)} 个测试问题")
             print(f"  数据集: {dataset_name}")
