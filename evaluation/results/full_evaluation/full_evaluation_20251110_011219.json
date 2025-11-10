@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "timestamp": "20251110_011219",
+    "num_samples": 0,
+    "system_config": "configs/config.yaml",
+    "eval_config": "evaluation/configs/full_eval_config.yaml"
+  },
+  "results": {
+    "evaluation_time": "2025-11-09T22:08:54.887746",
+    "test_data_info": {
+      "num_questions": 200,
+      "clinical_sample_size": 50
+    },
+    "technical_metrics": {
+      "bert_precision": 0.7430848479270935,
+      "bert_recall": 0.7424013018608093,
+      "bert_f1": 0.7426677942276001,
+      "rouge1_f1": 0.5249626477610563,
+      "rouge2_f1": 0.14334896673213174,
+      "rougeL_f1": 0.1951860630462886,
+      "bleu": 0.5662489605472952,
+      "avg_length": 2907.725,
+      "min_length": 169.0,
+      "max_length": 4780.0,
+      "std_length": 753.2994354006911
+    },
+    "clinical_metrics": {
+      "empathy_avg": 0.0,
+      "empathy_std": 0.0,
+      "supportiveness_avg": 0.0,
+      "supportiveness_std": 0.0,
+      "guidance_avg": 0.0,
+      "guidance_std": 0.0,
+      "reflectiveness_avg": 0.0,
+      "reflectiveness_std": 0.0,
+      "reassurance_avg": 0.0,
+      "reassurance_std": 0.0,
+      "professionalism_avg": 0.0,
+      "professionalism_std": 0.0,
+      "information_avg": 0.0,
+      "information_std": 0.0,
+      "overall_avg": 0.0
+    },
+    "overall_score": 0.37133389711380005
+  }
+}
