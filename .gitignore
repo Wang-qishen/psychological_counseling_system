@@ -79,3 +79,96 @@ models/**/*.gguf
 models/models/
 *.zip
 new_files_to_add/
+
+# ============================================
+
+# 数据文件 - 不上传到Git
+
+# ============================================
+
+# 下载的原始数据集（很大）
+
+data/downloaded_datasets/
+
+data/downloaded_datasets/*
+
+# 处理后的知识库数据（很大）
+
+data/processed_knowledge/
+
+data/processed_knowledge/*
+
+# 向量数据库（很大）
+
+data/vector_db/
+
+data/vector_db/*
+
+# 临时和测试数据
+
+data/test_data/
+
+data/test_import/
+
+data/processed_knowledge_sample/
+
+# ============================================
+
+# 日志和临时文件
+
+# ============================================
+
+# 导入日志
+
+import.log
+
+nohup.out
+
+*.log
+
+# Python缓存
+
+__pycache__/
+
+*.py[cod]
+
+*$py.class
+
+*.so
+
+.Python
+
+*.egg-info/
+
+dist/
+
+build/
+
+# 环境相关
+
+.env
+
+.venv
+
+venv/
+
+ENV/
+
+# IDE配置
+
+.vscode/
+
+.idea/
+
+*.swp
+
+*.swo
+
+*~
+
+# 操作系统文件
+
+.DS_Store
+
+Thumbs.db
+

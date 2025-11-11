@@ -1,0 +1,94 @@
+# 对比实验配置
+# 位置: evaluation/configs/comparison_config.yaml
+# 用途: 对比裸LLM、LLM+RAG、完整系统三种配置的性能
+
+comparison:
+  # 实验名称
+  name: "three_system_comparison"
+  description: "对比裸LLM、LLM+RAG、完整系统的消融实验"
+  
+  # 测试样本数量（建议20-50个，期末作业用）
+  num_test_samples: 30
+  
+  # 测试问题来源
+  test_questions:
+    # 选项: "dataset" (从数据集加载) 或 "custom" (使用自定义问题)
+    source: "custom"
+    
+    # 如果选择custom，问题文件路径
+    custom_file: "evaluation/datasets/comparison_test_questions.json"
+    
+    # 如果选择dataset，数据集名称
+    dataset_name: "smile"
+  
+  # 三种配置
+  configurations:
+    baseline:
+      name: "裸LLM（基线）"
+      enable_rag: false
+      enable_memory: false
+      description: "仅使用LLM生成回复，不使用RAG和记忆系统"
+    
+    rag_only:
+      name: "LLM + RAG"
+      enable_rag: true
+      enable_memory: false
+      description: "使用RAG检索知识库，但不使用记忆系统"
+    
+    full_system:
+      name: "完整系统"
+      enable_rag: true
+      enable_memory: true
+      description: "使用RAG和记忆系统的完整配置"
+  
+  # 评估维度
+  evaluation_dimensions:
+    # 自动评估指标
+    automatic:
+      - response_time        # 响应时间
+      - response_length      # 回复长度
+      - semantic_similarity  # 语义相似度（如果有参考答案）
+    
+    # 人工评估指标（1-5分）
+    manual:
+      - relevance           # 回复相关性
+      - professionalism     # 专业性
+      - empathy            # 共情能力
+      - helpfulness        # 有用性
+      - clarity            # 清晰度
+  
+  # 输出配置
+  output:
+    results_dir: "evaluation/results/comparison"
+    figures_dir: "evaluation/results/comparison/figures"
+    reports_dir: "evaluation/results/comparison/reports"
+    
+    # 生成的图表类型
+    visualizations:
+      - bar_chart           # 各维度对比柱状图
+      - radar_chart         # 雷达图
+      - response_time_box   # 响应时间箱线图
+      - comparison_table    # 对比表格
+    
+    # 报告格式
+    report_formats:
+      - markdown            # Markdown格式报告
+      - json               # JSON格式数据
+      - excel              # Excel表格（可选）
+  
+  # 人工评估配置
+  manual_evaluation:
+    enabled: true
+    # 评估方式: "interactive" (交互式) 或 "batch" (批量)
+    mode: "interactive"
+    # 是否显示配置名称（建议false以避免偏见）
+    show_config_name: false
+    # 是否随机打乱顺序
+    randomize_order: true
+  
+  # 统计分析
+  statistics:
+    # 是否进行显著性检验
+    significance_test: true
+    # 置信水平
+    confidence_level: 0.95

@@ -1,0 +1,229 @@
+{
+  "metadata": {
+    "name": "对比实验测试问题集",
+    "description": "精选的30个心理咨询测试问题，覆盖多种场景",
+    "total_questions": 30,
+    "categories": [
+      "焦虑情绪",
+      "抑郁症状",
+      "人际关系",
+      "工作压力",
+      "睡眠问题",
+      "自我认知",
+      "情感问题",
+      "家庭关系"
+    ]
+  },
+  "questions": [
+    {
+      "id": 1,
+      "category": "焦虑情绪",
+      "question": "我最近总是莫名其妙地感到紧张和不安，心跳加速，手心出汗，这是怎么回事？",
+      "difficulty": "medium",
+      "expected_topics": ["焦虑症状", "生理反应", "应对方法"]
+    },
+    {
+      "id": 2,
+      "category": "抑郁症状",
+      "question": "我已经连续两周对任何事情都提不起兴趣，感觉生活没有意义，该怎么办？",
+      "difficulty": "high",
+      "expected_topics": ["抑郁症状", "兴趣丧失", "寻求帮助"]
+    },
+    {
+      "id": 3,
+      "category": "工作压力",
+      "question": "工作任务太多，每天都加班到很晚，感觉快要撑不住了，如何缓解这种压力？",
+      "difficulty": "medium",
+      "expected_topics": ["工作压力", "时间管理", "放松技巧"]
+    },
+    {
+      "id": 4,
+      "category": "睡眠问题",
+      "question": "我躺在床上总是翻来覆去睡不着，脑子里不停地想事情，有什么办法可以改善睡眠？",
+      "difficulty": "medium",
+      "expected_topics": ["失眠", "睡眠卫生", "认知行为疗法"]
+    },
+    {
+      "id": 5,
+      "category": "人际关系",
+      "question": "我和同事相处总是有些尴尬，不知道该怎么和他们交流，感觉自己格格不入。",
+      "difficulty": "medium",
+      "expected_topics": ["社交焦虑", "沟通技巧", "人际关系"]
+    },
+    {
+      "id": 6,
+      "category": "自我认知",
+      "question": "我总觉得自己不够好，做什么都不如别人，这种想法让我很痛苦。",
+      "difficulty": "medium",
+      "expected_topics": ["自我评价", "认知偏差", "自我接纳"]
+    },
+    {
+      "id": 7,
+      "category": "情感问题",
+      "question": "分手已经三个月了，但我还是无法释怀，每天都很难过，怎么才能走出来？",
+      "difficulty": "high",
+      "expected_topics": ["失恋", "情感创伤", "疗愈过程"]
+    },
+    {
+      "id": 8,
+      "category": "家庭关系",
+      "question": "父母总是对我的生活指手画脚，让我感觉喘不过气来，我该如何与他们沟通？",
+      "difficulty": "medium",
+      "expected_topics": ["家庭界限", "亲子沟通", "独立性"]
+    },
+    {
+      "id": 9,
+      "category": "焦虑情绪",
+      "question": "明天要做演讲，我现在特别紧张，担心自己会搞砸，有什么方法可以缓解这种焦虑？",
+      "difficulty": "low",
+      "expected_topics": ["表现焦虑", "应对策略", "放松训练"]
+    },
+    {
+      "id": 10,
+      "category": "工作压力",
+      "question": "领导经常批评我，让我觉得自己很失败，我开始怀疑自己的能力了。",
+      "difficulty": "medium",
+      "expected_topics": ["职场压力", "自我怀疑", "应对批评"]
+    },
+    {
+      "id": 11,
+      "category": "睡眠问题",
+      "question": "我每天晚上都做噩梦，醒来后感觉很累，白天精神也不好。",
+      "difficulty": "medium",
+      "expected_topics": ["噩梦", "睡眠质量", "心理压力"]
+    },
+    {
+      "id": 12,
+      "category": "人际关系",
+      "question": "我的朋友总是找我倾诉，但我觉得这给我带来了很大的负担，我该怎么办？",
+      "difficulty": "medium",
+      "expected_topics": ["边界设定", "情感负担", "拒绝技巧"]
+    },
+    {
+      "id": 13,
+      "category": "抑郁症状",
+      "question": "我经常感到疲惫无力，什么都不想做，只想躺在床上，这正常吗？",
+      "difficulty": "medium",
+      "expected_topics": ["疲劳", "动力缺失", "抑郁症状"]
+    },
+    {
+      "id": 14,
+      "category": "自我认知",
+      "question": "我总是过度在意别人对我的看法，这让我活得很累，如何改变这种状态？",
+      "difficulty": "medium",
+      "expected_topics": ["社交焦虑", "自我价值", "他人评价"]
+    },
+    {
+      "id": 15,
+      "category": "情感问题",
+      "question": "我和伴侣经常因为小事吵架，感觉感情越来越淡了，该如何改善？",
+      "difficulty": "medium",
+      "expected_topics": ["情侣关系", "沟通问题", "冲突解决"]
+    },
+    {
+      "id": 16,
+      "category": "焦虑情绪",
+      "question": "我总是担心未来会发生不好的事情，这种担忧让我无法专注当下。",
+      "difficulty": "medium",
+      "expected_topics": ["焦虑思维", "正念", "当下意识"]
+    },
+    {
+      "id": 17,
+      "category": "工作压力",
+      "question": "我感觉自己在工作中没有成就感，每天都是重复性的工作，很迷茫。",
+      "difficulty": "medium",
+      "expected_topics": ["职业倦怠", "意义感", "职业规划"]
+    },
+    {
+      "id": 18,
+      "category": "家庭关系",
+      "question": "我和伴侣的父母相处不太融洽，这给我们的婚姻带来了很大压力。",
+      "difficulty": "high",
+      "expected_topics": ["婆媳关系", "家庭矛盾", "婚姻压力"]
+    },
+    {
+      "id": 19,
+      "category": "睡眠问题",
+      "question": "我习惯熬夜玩手机，知道这样不好但就是控制不住，该怎么办？",
+      "difficulty": "low",
+      "expected_topics": ["习惯改变", "自我控制", "睡眠卫生"]
+    },
+    {
+      "id": 20,
+      "category": "自我认知",
+      "question": "我是一个完美主义者，总是对自己要求很高，做不到就会很自责。",
+      "difficulty": "medium",
+      "expected_topics": ["完美主义", "自我要求", "自我接纳"]
+    },
+    {
+      "id": 21,
+      "category": "人际关系",
+      "question": "我害怕拒绝别人的请求，即使自己很为难也会答应，怎么学会说不？",
+      "difficulty": "medium",
+      "expected_topics": ["取悦型人格", "边界", "拒绝技巧"]
+    },
+    {
+      "id": 22,
+      "category": "抑郁症状",
+      "question": "我最近总是想哭，特别是一个人的时候，感觉很孤独。",
+      "difficulty": "high",
+      "expected_topics": ["情绪低落", "孤独感", "情感支持"]
+    },
+    {
+      "id": 23,
+      "category": "焦虑情绪",
+      "question": "我有考试焦虑，每次考试前都会紧张到拉肚子，影响发挥。",
+      "difficulty": "medium",
+      "expected_topics": ["考试焦虑", "应试策略", "放松技巧"]
+    },
+    {
+      "id": 24,
+      "category": "情感问题",
+      "question": "我不确定自己是否真的爱我的伴侣，还是只是习惯了这段关系。",
+      "difficulty": "high",
+      "expected_topics": ["爱情本质", "关系评估", "自我探索"]
+    },
+    {
+      "id": 25,
+      "category": "工作压力",
+      "question": "我被晋升为管理岗位，但不知道如何管理团队，压力很大。",
+      "difficulty": "medium",
+      "expected_topics": ["角色转换", "管理焦虑", "领导力"]
+    },
+    {
+      "id": 26,
+      "category": "家庭关系",
+      "question": "我的孩子进入青春期后变得叛逆，我们的关系越来越紧张。",
+      "difficulty": "high",
+      "expected_topics": ["青春期", "亲子关系", "教育方式"]
+    },
+    {
+      "id": 27,
+      "category": "自我认知",
+      "question": "我经常感到空虚，不知道自己想要什么，生活没有方向。",
+      "difficulty": "high",
+      "expected_topics": ["自我探索", "人生意义", "目标设定"]
+    },
+    {
+      "id": 28,
+      "category": "睡眠问题",
+      "question": "我白天总是犯困，但到了晚上反而很精神，生物钟完全颠倒了。",
+      "difficulty": "medium",
+      "expected_topics": ["昼夜节律", "作息调整", "睡眠时间"]
+    },
+    {
+      "id": 29,
+      "category": "人际关系",
+      "question": "我发现自己很难信任别人，总觉得别人会伤害我或离开我。",
+      "difficulty": "high",
+      "expected_topics": ["信任问题", "依恋模式", "安全感"]
+    },
+    {
+      "id": 30,
+      "category": "抑郁症状",
+      "question": "我对自己的外貌很不满意，总觉得自己很丑，这让我不敢社交。",
+      "difficulty": "medium",
+      "expected_topics": ["身体形象", "自我接纳", "社交回避"]
+    }
+  ]
+}
