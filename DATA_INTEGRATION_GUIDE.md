@@ -51,7 +51,7 @@ psychological_counseling_system/
 ```
 
 ---
-
+哎
 ## 🚀 快速开始
 
 ### 方式1: 一键运行 (推荐)
