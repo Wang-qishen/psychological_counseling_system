@@ -1,38 +1,202 @@
-# Local Models Directory
+# Models Directory
 
-This directory stores locally downloaded models.
+This directory stores local language models for the system.
 
-## Download TinyLlama Model
+---
+
+## Supported Models
+
+### Qwen2-7B-Instruct (Recommended)
+
+**Quantized versions** for efficient inference:
+
+- **Q4_K_M** (Recommended): ~4GB, good balance
+- **Q5_K_M**: ~5GB, better quality
+- **Q8_0**: ~7GB, highest quality
+
+---
+
+## Download Methods
+
+### Method 1: Automated Script (Recommended)
 
 ```bash
-cd models
-wget https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
+# From project root
+bash download_model.sh
 ```
 
-Or use huggingface-cli:
+This downloads Qwen2-7B-Instruct Q4_K_M (~4GB) to `models/models/`.
+
+### Method 2: Manual Download
 
 ```bash
-pip install huggingface-hub
-cd models
-huggingface-cli download TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf --local-dir . --local-dir-use-symlinks False
+# Create directory
+mkdir -p models/models
+
+# Download from Hugging Face
+wget https://huggingface.co/Qwen/Qwen2-7B-Instruct-GGUF/resolve/main/qwen2-7b-instruct-q4_k_m.gguf \
+     -O models/models/qwen2-7b-instruct-q4_k_m.gguf
 ```
 
-## Model Files
+### Method 3: Using huggingface-cli
 
-After download, you should have:
-- tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf (约 600MB)
+```bash
+pip install huggingface_hub
 
-## Other Recommended Models
+huggingface-cli download \
+  Qwen/Qwen2-7B-Instruct-GGUF \
+  qwen2-7b-instruct-q4_k_m.gguf \
+  --local-dir models/models
+```
 
-### Larger Models (if you have enough VRAM)
-- Mistral-7B: `TheBloke/Mistral-7B-Instruct-v0.2-GGUF`
-- Llama-3-8B: `TheBloke/Meta-Llama-3-8B-Instruct-GGUF`
+---
 
-### Chinese Models
-- Qwen2-7B: `Qwen/Qwen2-7B-Instruct-GGUF`
-- ChatGLM3-6B: `THUDM/chatglm3-6b-GGUF`
+## Directory Structure
 
-## Note
+```
+models/
+├── README.md              # This file
+└── models/                # Model files
+    └── qwen2-7b-instruct-q4_k_m.gguf  # Downloaded model
+```
 
-Models are automatically gitignored (see .gitignore)
+---
 
+## Model Comparison
+
+| Model | Size | Quality | Speed | Memory |
+|-------|------|---------|-------|--------|
+| Q4_K_M | 4GB | Good | Fast | 6GB RAM |
+| Q5_K_M | 5GB | Better | Medium | 7GB RAM |
+| Q8_0 | 7GB | Best | Slow | 9GB RAM |
+
+### Which to Choose?
+
+- **Limited RAM** (<8GB): Q4_K_M
+- **Balanced** (8-16GB): Q5_K_M
+- **Best Quality** (>16GB): Q8_0
+
+---
+
+## GPU Acceleration
+
+### NVIDIA GPU (CUDA)
+
+Set in `configs/config.yaml`:
+
+```yaml
+llm:
+  local:
+    n_gpu_layers: 35  # Offload all layers
+```
+
+**VRAM Requirements:**
+- Q4_K_M: ~4GB VRAM
+- Q5_K_M: ~5GB VRAM
+- Q8_0: ~7GB VRAM
+
+### CPU Only
+
+```yaml
+llm:
+  local:
+    n_gpu_layers: 0  # Use CPU only
+```
+
+---
+
+## Alternative Models
+
+### Other Qwen2 Variants
+
+```bash
+# Qwen2-1.5B (smaller, faster)
+wget https://huggingface.co/Qwen/Qwen2-1.5B-Instruct-GGUF/resolve/main/qwen2-1_5b-instruct-q4_k_m.gguf
+
+# Qwen2-14B (larger, better)
+wget https://huggingface.co/Qwen/Qwen2-14B-Instruct-GGUF/resolve/main/qwen2-14b-instruct-q4_k_m.gguf
+```
+
+### Other Model Families
+
+Compatible GGUF models:
+- **Llama 3** (English-focused)
+- **Mistral 7B** (Good general model)
+- **Yi-6B** (Chinese-focused)
+
+To use, update `configs/config.yaml`:
+
+```yaml
+llm:
+  local:
+    model_path: 'models/models/your-model.gguf'
+```
+
+---
+
+## Verify Download
+
+```bash
+# Check file size
+ls -lh models/models/
+
+# Test loading
+python -c "from llm import LocalLLM; llm = LocalLLM({'model_path': 'models/models/qwen2-7b-instruct-q4_k_m.gguf', 'n_ctx': 2048}); print('✓ Model loaded successfully')"
+```
+
+---
+
+## Troubleshooting
+
+### Issue: Download Failed
+
+**Solution 1**: Try alternative mirror (China users)
+```bash
+export HF_ENDPOINT=https://hf-mirror.com
+bash download_model.sh
+```
+
+**Solution 2**: Manual download from [Hugging Face](https://huggingface.co/Qwen/Qwen2-7B-Instruct-GGUF/tree/main)
+
+### Issue: Model Not Found
+
+**Error**: `FileNotFoundError: models/models/qwen2-7b-instruct-q4_k_m.gguf`
+
+**Solution**: Check file exists
+```bash
+ls models/models/
+```
+
+### Issue: Out of Memory
+
+**Error**: `RuntimeError: failed to allocate memory`
+
+**Solution 1**: Reduce GPU layers
+```yaml
+n_gpu_layers: 20  # Instead of 35
+```
+
+**Solution 2**: Use smaller model
+```bash
+# Download Q4_K_M if you have Q5/Q8
+```
+
+---
+
+## License
+
+Models have their own licenses. Please check:
+- Qwen2: Apache 2.0
+- Check model card on Hugging Face for specific terms
+
+---
+
+## Further Reading
+
+- [Installation Guide](../INSTALLATION.md) - Setup instructions
+- [Configuration Guide](../docs/configuration.md) - Configure models
+- [llama.cpp](https://github.com/ggerganov/llama.cpp) - Inference engine
+
+---
+
+**Questions?** See [Troubleshooting](../INSTALLATION.md#troubleshooting) or open an issue.

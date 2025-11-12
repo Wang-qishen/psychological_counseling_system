@@ -1,313 +1,401 @@
-# 快速入门指南
+# Quick Start Guide
 
-## 1. 环境配置
+Get started with the Psychological Counseling System in 5 minutes!
 
-### 1.1 创建虚拟环境
+---
+
+## Prerequisites
+
+Before starting, ensure you have:
+- Python 3.8 or higher
+- pip installed
+- (Optional) CUDA-capable GPU for local model
+
+---
+
+## Step 1: Installation (2 minutes)
 
 ```bash
-conda create -n psy_counsel python=3.10
-conda activate psy_counsel
+# Clone the repository
+git clone https://github.com/yourusername/psychological_counseling_system.git
+cd psychological_counseling_system
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Download embedding model
+python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-mpnet-base-v2')"
 ```
 
-### 1.2 安装依赖
+---
 
+## Step 2: Choose Your LLM Backend (1 minute)
+
+### Option A: Use OpenAI API (Easiest, Recommended for First Try)
+
+1. Get an OpenAI API key from https://platform.openai.com/api-keys
+
+2. Set your API key:
+   ```bash
+   export OPENAI_API_KEY='your-api-key-here'
+   ```
+
+3. Edit `configs/config.yaml`:
+   ```yaml
+   llm:
+     backend: 'api'
+   ```
+
+### Option B: Use Local Model (Free but Slower)
+
+1. Download Qwen2-7B model:
+   ```bash
+   bash download_model.sh
+   ```
+
+2. Edit `configs/config.yaml`:
+   ```yaml
+   llm:
+     backend: 'local'
+   ```
+
+---
+
+## Step 3: Run Your First Conversation (1 minute)
+
+Create a file `test_chat.py`:
+
+```python
+from dialogue import create_dialogue_manager_from_config
+import yaml
+
+# Load configuration
+with open('configs/config.yaml', 'r') as f:
+    config = yaml.safe_load(f)
+
+# Create dialogue manager
+manager = create_dialogue_manager_from_config(config)
+
+# Start a new session
+user_id = "demo_user"
+session_id = manager.start_session(user_id)
+
+# Have a conversation
+messages = [
+    "Hi, I've been feeling really stressed about work lately.",
+    "I can't sleep well and I keep worrying about deadlines.",
+    "What can I do to feel better?"
+]
+
+for msg in messages:
+    print(f"\n👤 User: {msg}")
+    response = manager.chat(
+        user_id=user_id,
+        session_id=session_id,
+        user_message=msg
+    )
+    print(f"🤖 Assistant: {response}")
+
+# End session
+manager.end_session(user_id, session_id)
+print("\n✅ Session ended")
+```
+
+Run it:
+```bash
+python test_chat.py
+```
+
+**Expected Output:**
+```
+👤 User: Hi, I've been feeling really stressed about work lately.
+🤖 Assistant: I understand you're experiencing work-related stress. This is very common...
+
+👤 User: I can't sleep well and I keep worrying about deadlines.
+🤖 Assistant: Sleep difficulties and persistent worry about deadlines suggest anxiety...
+
+👤 User: What can I do to feel better?
+🤖 Assistant: Here are some evidence-based strategies you can try...
+
+✅ Session ended
+```
+
+---
+
+## Step 4: Explore Features (1 minute)
+
+### Try with Memory
+
+Run the conversation again with the same `user_id`. Notice how the system remembers previous conversations!
+
+```python
+# Continue from where we left off
+session_id_2 = manager.start_session(user_id)
+
+response = manager.chat(
+    user_id=user_id,
+    session_id=session_id_2,
+    user_message="I tried the techniques you mentioned last time."
+)
+
+print(response)  # System will reference previous session!
+```
+
+### Try RAG Knowledge Retrieval
+
+The system automatically retrieves relevant professional knowledge:
+
+```python
+response = manager.chat(
+    user_id=user_id,
+    session_id=session_id,
+    user_message="What is cognitive behavioral therapy?"
+)
+
+# The response will include CBT techniques from the knowledge base
+print(response)
+```
+
+---
+
+## What Just Happened?
+
+Behind the scenes, the system:
+
+1. **Retrieved professional knowledge** about stress and anxiety from the psychological knowledge base
+2. **Remembered your profile** (user_id, issues mentioned)
+3. **Maintained conversation context** (working memory of last 10 turns)
+4. **Generated a personalized response** using LLM + retrieved context
+5. **Updated memory** after each turn
+6. **Summarized the session** when you called `end_session()`
+
+---
+
+## Next Steps
+
+### Explore Examples
+
+Check out more examples in the `examples/` directory:
+
+```bash
+# Basic RAG chat
+python examples/basic_rag_chat.py
+
+# Multi-session chat (demonstrates memory)
+python examples/multi_session_chat.py
+
+# Add custom knowledge to the system
+python examples/add_knowledge.py
+```
+
+### Run Evaluation Experiments
+
+Reproduce the paper's experiments:
+
+```bash
+# Quick test (5 minutes)
+python evaluation/scripts/run_quick_test.py
+
+# Full comparison experiment
+python examples/comparison_experiment.py
+```
+
+Results will be saved in `experiments/` and `evaluation/results/`.
+
+### Customize the System
+
+1. **Add your own knowledge**: Place `.txt` files in `data/psychological_knowledge/`
+2. **Adjust parameters**: Edit `configs/config.yaml`
+3. **Change system prompt**: Modify `dialogue.system_prompt` in config
+
+See [Configuration Guide](configuration.md) for all options.
+
+---
+
+## Common Use Cases
+
+### Use Case 1: Research on RAG Systems
+
+```python
+# Disable RAG to see baseline performance
+manager = create_dialogue_manager_from_config(config)
+manager.enable_rag = False
+
+# Enable RAG
+manager.enable_rag = True
+```
+
+### Use Case 2: Study Memory Systems
+
+```python
+# Disable memory
+manager.enable_memory = False
+
+# Enable only working memory
+config['memory']['layers']['profile']['auto_update'] = False
+
+# Enable full memory system
+config['memory']['layers']['profile']['auto_update'] = True
+```
+
+### Use Case 3: Compare LLM Backends
+
+```python
+# Test with GPT-4
+config['llm']['backend'] = 'api'
+config['llm']['api']['model'] = 'gpt-4'
+
+# Test with GPT-3.5
+config['llm']['api']['model'] = 'gpt-3.5-turbo'
+
+# Test with local Qwen2
+config['llm']['backend'] = 'local'
+```
+
+---
+
+## Troubleshooting Quick Start
+
+### Issue: Import Error
+
+**Error**: `ModuleNotFoundError: No module named 'dialogue'`
+
+**Solution**: Make sure you're in the project root directory:
 ```bash
 cd psychological_counseling_system
-pip install -r requirements.txt
+python test_chat.py
 ```
 
-### 1.3 配置API密钥（如果使用API后端）
+### Issue: OpenAI API Error
 
+**Error**: `AuthenticationError`
+
+**Solution**: Check your API key is set:
 ```bash
-# 复制环境变量模板
-cp .env.template .env
-
-# 编辑.env文件，填入你的API密钥
-nano .env
+echo $OPENAI_API_KEY
 ```
 
-### 1.4 下载本地模型（如果使用本地后端）
+### Issue: Model Download Failed
 
+**Error**: `Cannot download model`
+
+**Solution**: Try manual download:
 ```bash
-# 进入项目的models目录
-cd psychological_counseling_system/models
-
-# 方法1: 使用wget下载
-wget https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
-
-# 方法2: 使用huggingface-cli下载（推荐）
-pip install huggingface-hub
-huggingface-cli download TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF \
-  tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf \
-  --local-dir . \
-  --local-dir-use-symlinks False
-
-# 返回项目根目录
-cd ..
+wget https://huggingface.co/Qwen/Qwen2-7B-Instruct-GGUF/resolve/main/qwen2-7b-instruct-q4_k_m.gguf \
+     -O models/models/qwen2-7b-instruct-q4_k_m.gguf
 ```
 
-## 2. 配置系统
+### Issue: Out of Memory
 
-编辑 `configs/config.yaml`:
+**Error**: `CUDA out of memory`
 
-### 2.1 选择LLM后端
-
-**使用API (推荐用于开发):**
+**Solution**: Reduce GPU layers in config:
 ```yaml
+llm:
+  local:
+    n_gpu_layers: 10  # or 0 for CPU-only
+```
+
+---
+
+## Configuration Cheat Sheet
+
+Quick reference for common configurations:
+
+```yaml
+# Use GPT-4 API
 llm:
   backend: 'api'
   api:
-    provider: 'openai'
-    model: 'gpt-4o-mini'
-```
+    model: 'gpt-4'
 
-**使用本地模型:**
-```yaml
+# Use local model with GPU
 llm:
   backend: 'local'
   local:
-    model_path: './models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf'
-    n_gpu_layers: 35  # 使用GPU加速
-```
+    n_gpu_layers: 35
 
-### 2.2 配置embedding模型
+# Disable RAG
+dialogue:
+  generation:
+    enable_rag: false
 
-默认使用多语言模型，适合中文：
-```yaml
+# Disable memory
+dialogue:
+  generation:
+    enable_memory: false
+
+# Increase working memory size
+memory:
+  layers:
+    session:
+      max_turns: 20
+
+# More aggressive RAG retrieval
 rag:
-  embedding:
-    model_name: 'sentence-transformers/paraphrase-multilingual-mpnet-base-v2'
-    device: 'cuda'  # 使用GPU
+  retrieval:
+    top_k: 10
+    score_threshold: 0.3
 ```
 
-## 3. 运行示例
+---
 
-### 3.1 基础RAG对话
+## Interactive Quickstart Script
+
+We provide an interactive script that guides you through setup:
 
 ```bash
-python examples/basic_rag_chat.py
+python scripts/interactive_setup.py
 ```
 
-这个示例展示：
-- ✅ 创建用户
-- ✅ 添加心理知识
-- ✅ 进行单次会话对话
-- ✅ RAG检索功能
-- ✅ 记忆存储
+This will:
+1. Check your installation
+2. Help you choose LLM backend
+3. Test your configuration
+4. Run a sample conversation
 
-### 3.2 多会话对话（展示记忆系统）
+---
 
-```bash
-python examples/multi_session_chat.py
-```
+## Learning Path
 
-这个示例展示：
-- ✅ 跨会话记忆
-- ✅ 自动会话摘要
-- ✅ 情绪趋势追踪
-- ✅ 用户档案管理
+**Beginner** (30 minutes):
+1. ✅ This quickstart guide
+2. Read [System Overview](../README.md)
+3. Try `examples/basic_rag_chat.py`
 
-## 4. 核心使用方法
+**Intermediate** (2 hours):
+1. Read [Architecture](architecture.md)
+2. Try all examples in `examples/`
+3. Run `comparison_experiment.py`
 
-### 4.1 初始化系统
+**Advanced** (1 day):
+1. Read [Configuration Guide](configuration.md)
+2. Read [Evaluation Guide](evaluation.md)
+3. Modify and extend the system
 
-```python
-from utils import load_config, setup_directories
-from dialogue import create_dialogue_manager_from_config
+---
 
-# 加载配置
-config = load_config()
-setup_directories(config)
+## Getting Help
 
-# 创建对话管理器
-dialogue_manager = create_dialogue_manager_from_config(config)
-```
+If you're stuck:
 
-### 4.2 创建用户
+1. **Check documentation**: [docs/](.)
+2. **Read examples**: [examples/](../examples/)
+3. **Search issues**: [GitHub Issues](https://github.com/yourusername/psychological_counseling_system/issues)
+4. **Ask questions**: Open a new issue
 
-```python
-# 创建新用户
-user_id = "user_001"
-dialogue_manager.memory_manager.create_user(
-    user_id=user_id,
-    age=28,
-    gender="女",
-    occupation="软件工程师"
-)
-```
+---
 
-### 4.3 添加知识
+## What's Next?
 
-```python
-from knowledge import Document
+Now that you have the system running, you can:
 
-# 添加心理知识
-knowledge = [
-    Document(
-        content="认知行为疗法(CBT)是...",
-        metadata={"source": "CBT", "category": "therapy"}
-    )
-]
-dialogue_manager.rag_manager.add_psychological_knowledge(knowledge)
+- 📖 **Learn more**: Read the [Architecture Documentation](architecture.md)
+- 🔧 **Customize**: See the [Configuration Guide](configuration.md)
+- 🔬 **Experiment**: Follow the [Evaluation Guide](evaluation.md)
+- 💻 **Code**: Explore [Usage Examples](examples.md)
+- 📊 **Analyze**: Review the [Paper Results](../experiments/)
 
-# 添加用户个人信息
-dialogue_manager.rag_manager.add_user_knowledge(
-    user_id=user_id,
-    content="用户曾经历过工作倦怠，目前正在恢复中。",
-    metadata={"type": "history"}
-)
-```
+---
 
-### 4.4 进行对话
-
-```python
-# 开始会话
-session_id = dialogue_manager.start_session(user_id)
-
-# 对话
-response = dialogue_manager.chat(
-    user_id=user_id,
-    session_id=session_id,
-    user_message="我最近压力很大",
-    emotion={"stress": 0.8, "anxiety": 0.6}  # 可选
-)
-
-print(response)
-
-# 结束会话（会自动生成摘要）
-dialogue_manager.end_session(user_id, session_id)
-```
-
-### 4.5 查看记忆
-
-```python
-# 获取用户记忆
-user_memory = dialogue_manager.memory_manager.get_user_memory(user_id)
-
-# 查看档案
-print(user_memory.profile.to_dict())
-
-# 查看最近会话
-recent_sessions = user_memory.get_recent_sessions(n=5)
-for session in recent_sessions:
-    print(f"会话: {session.session_summary}")
-
-# 查看情绪趋势
-if user_memory.trends:
-    for record in user_memory.trends.emotion_history:
-        print(f"时间: {record.timestamp}, 情绪: {record.emotions}")
-```
-
-## 5. 系统架构说明
-
-```
-用户输入
-  ↓
-记忆检索 ← [会话记忆 + 用户档案 + 长期趋势]
-  ↓
-RAG检索 ← [心理知识库 + 用户知识库]
-  ↓
-构建Prompt (整合记忆 + RAG结果)
-  ↓
-LLM生成回复
-  ↓
-更新记忆 → [保存对话 + 更新情绪 + 生成摘要]
-  ↓
-返回回复
-```
-
-## 6. 扩展开发
-
-### 6.1 添加新的LLM后端
-
-```python
-# 1. 在 llm/ 目录创建新文件，如 custom_llm.py
-from llm.base import BaseLLM, Message, LLMResponse
-
-class CustomLLM(BaseLLM):
-    def generate(self, messages, **kwargs):
-        # 实现你的逻辑
-        pass
-    
-    def count_tokens(self, text):
-        # 实现token计数
-        pass
-
-# 2. 注册到工厂
-from llm import LLMFactory
-LLMFactory.register('custom', CustomLLM)
-```
-
-### 6.2 添加新的存储后端
-
-```python
-# 在 memory/storage.py 中添加
-class MongoDBMemoryStorage(BaseMemoryStorage):
-    def save_user_memory(self, user_memory):
-        # 实现MongoDB存储
-        pass
-    
-    # ... 其他方法
-```
-
-### 6.3 自定义RAG检索策略
-
-```python
-# 继承RAGManager并重写方法
-from knowledge import RAGManager
-
-class CustomRAGManager(RAGManager):
-    def _rerank(self, query, documents):
-        # 实现自定义重排序逻辑
-        pass
-```
-
-## 7. 故障排除
-
-### 7.1 CUDA相关错误
-
-如果看到CUDA错误，修改配置：
-```yaml
-rag:
-  embedding:
-    device: 'cpu'  # 改为CPU
-```
-
-### 7.2 API调用失败
-
-检查：
-1. `.env` 文件中API密钥是否正确
-2. 网络连接是否正常
-3. API额度是否用完
-
-### 7.3 本地模型加载失败
-
-检查：
-1. 模型文件路径是否正确
-2. 模型文件是否下载完整
-3. GPU内存是否足够
-
-## 8. 性能优化建议
-
-### 8.1 生产环境
-
-- 使用SQLite或MongoDB替代JSON存储
-- 启用RAG缓存
-- 批量处理embedding计算
-- 使用更强大的LLM（如GPT-4）
-
-### 8.2 开发环境
-
-- 使用轻量级模型快速迭代
-- 减少RAG检索的top_k值
-- 禁用自动摘要功能
-
-## 9. 下一步计划
-
-Phase 3即将开发：
-- [ ] 多模态情感识别
-- [ ] 语音输入支持
-- [ ] 面部表情分析
-- [ ] 跨模态情感融合
-
-敬请期待！
+**Congratulations!** 🎉 You've successfully set up and run your first psychological counseling conversation. Happy exploring!
