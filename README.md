@@ -11,7 +11,7 @@
 
 ## 📝 Overview
 
-This repository contains the implementation of our paper:
+This repository contains the implementation code for my final thesis:
 
 **"Intelligent Psychological Counseling Dialogue System Based on Dual-Knowledge-Base RAG and Three-Layer Memory"**
 
