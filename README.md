@@ -11,7 +11,7 @@
 
 ## 📝 Overview
 
-This repository contains the implementation code for my final thesis:
+This repository contains the implementation code for my final project in the course **"Psychology and Behavioral Computing"**:
 
 **"Intelligent Psychological Counseling Dialogue System Based on Dual-Knowledge-Base RAG and Three-Layer Memory"**
 
@@ -246,10 +246,3 @@ memory:
 See [Configuration Guide](docs/configuration.md) for all options.
 
 ---
-
-## 🤝 Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
----
-
