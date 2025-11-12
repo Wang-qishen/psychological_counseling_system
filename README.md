@@ -23,17 +23,17 @@ The system addresses key challenges in AI-powered mental health support:
 ### Key Features
 
 🔬 **Dual Knowledge Base Architecture**
-- Separated professional psychology knowledge (CBT, anxiety management, etc.)
+- Separated professional psychology knowledge
 - Individual user profile knowledge base
 - Differentiated retrieval strategies for balanced professionalism and personalization
 
 🧠 **Three-Layer Memory System**
-- **Working Memory**: Current session context (last 10 turns)
-- **Short-term Memory**: Session-level summaries (last 20 sessions)
+- **Working Memory**: Current session context
+- **Short-term Memory**: Session-level summaries
 - **Long-term Memory**: Persistent user profiles and cross-session trends
 
 🛠️ **Modular & Flexible Design**
-- Support for both local models (Qwen2-7B) and API models (GPT-4)
+- Support for both local models (Qwen2-7B) and API models (GPT-5)
 - Easy configuration via YAML files
 - Independent module testing and replacement
 
