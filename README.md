@@ -33,7 +33,7 @@ The system addresses key challenges in AI-powered mental health support:
 - **Long-term Memory**: Persistent user profiles and cross-session trends
 
 🛠️ **Modular & Flexible Design**
-- Support for both local models (Qwen2-7B) and API models (GPT-5)
+- Support for both local models (Qwen2-7B) and API models (GPT-4)
 - Easy configuration via YAML files
 - Independent module testing and replacement
 
